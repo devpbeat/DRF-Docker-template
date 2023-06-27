@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: template-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./:/code/
+      - static_volume:/code/staticfiles/
+    ports:
+      - "8001:8000"
+      - "3001:3000"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+  db:
+    container_name: template-db
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=SQL_USER=example_user
+      - POSTGRES_PASSWORD=3x4mpl3!@
+      - POSTGRES_DB=example_db
+    ports:
+      - "5432:5432"
+volumes:
+  static_volume:
+  postgres_data:
